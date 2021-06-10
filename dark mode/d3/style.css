@@ -1,0 +1,47 @@
+
+
+
+.container input[type=checkbox] {
+  display: none;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 73px;
+    height: 36px;
+    background-color: black;
+    transition: all 1s ease;
+    position: absolute;
+    border-radius: 30px;
+    cursor: pointer;
+    top: 1rem;
+    right: 1rem;
+}
+.box .ball {
+    width: 30px;
+    height: 30px;
+    background-color: grey;
+    transition: all 1s ease;
+    position: absolute;
+    border-radius: 50%;
+    right: 35px;
+    border: 3px solid black;
+}
+.box .scenary {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  transition: all 1s ease;
+  padding: 5px 10px 0px 10px;
+}
+.box .scenary svg {
+    width: 25px;
+}
+
+.dark-mode
+{
+  background-color: black;
+  color:#fff;
+}
