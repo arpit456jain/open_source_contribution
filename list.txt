@@ -1,0 +1,233 @@
+1.password validations
+2.dark-mode
+3.back to top
+4.form validations
+5.preloader
+6.error/success messgage
+7.favicon
+8.console empty/error
+9.show password button
+10.404 page
+12.footer
+12 wave
+14 csv download
+13.sweet alert 
+14 otp verification
+15 download csv in django
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+onclick="confirmation()"
+<script>
+    function confirmation(){
+    swal({
+      title: "Are you sure?",
+      text: "You Want to LogOut!!",
+      icon: "warning",
+      buttons: true,
+      buttons: ['cancel','Yes, Log out'],
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        window.location = "/logout";
+      } else {
+        
+      }
+    });
+    }
+  </script>
+
+
+
+check user is avalible or not
+
+urls.py
+    path('check_username',views.check_username,name="check_username"),
+    path('check_email',views.check_email,name="check_email")
+
+views.py
+from django.http import HttpResponse,JsonResponse
+
+
+def check_username(request):
+    username = request.GET.get("name")
+    if User.objects.filter(username=username).exists():
+        return JsonResponse({"exists":"yes"})
+    return JsonResponse({"exists":"no"})
+
+
+def check_email(request):
+    email = request.GET.get("email")
+    if User.objects.filter(email=email).exists():
+        return JsonResponse({"exists":"yes"})
+    return JsonResponse({"exists":"no"}) 
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+<script>
+      // Creating nodes for the mark and alert text
+        var newNode = document.createElement('span');
+        newNode.id = "validationmark1"
+        var referenceNode = document.querySelector("#id_username");
+        referenceNode.after(newNode);
+
+        var newNode = document.createElement('small');
+        newNode.id = "username_alert"
+        var referenceNode = document.querySelector("#validationmark1");
+        referenceNode.after(newNode);
+
+        var newNode = document.createElement('span');
+        newNode.id = "validationmark2"
+        var referenceNode = document.querySelector("#id_email");
+        referenceNode.after(newNode);
+
+        var newNode = document.createElement('small');
+        newNode.id = "email_alert"
+        var referenceNode = document.querySelector("#validationmark2");
+        referenceNode.after(newNode);
+
+       
+
+        $('#id_username').on('input', function () {
+                $.ajax({
+                    url: "/check_username",
+                    data: {
+                        'name':this.value
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        //Getting mark and alert text elements
+                        x = document.getElementById("username_alert")
+                        y = document.getElementById("validationmark1")
+
+                        if(data.exists == "yes"){
+                                x.style = "color: red;font-size: 17px;"
+                                x.innerHTML = "<br>Username not available <br>"
+                                y.innerHTML = "x"
+                                y.style = "color: red;margin-left: -23px;"
+                        }
+                        else{
+                            // If the input field is not empty and the username is available
+                            if($('#id_username').val() != ""){
+                                x.style = "color: green;font-size: 17px;"
+                                x.innerHTML = "<br>Username is available <br>"
+                                y.innerHTML = "✓"
+                                y.style = "color: green;margin-left: -23px;"
+                            }
+                            else{
+                                x.innerHTML = ""
+                                y.innerHTML = ""
+                            }
+                        }
+                    }
+                })
+            });
+
+
+            $('#id_email').on('input', function () {
+                $.ajax({
+                    url: "/check_email",
+                    data: {
+                        'email':this.value
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        x = document.getElementById("email_alert")
+                        y = document.getElementById("validationmark2")
+                        if(data.exists == "yes"){
+                                x.style = "color: red;font-size: 17px;"
+                                x.innerHTML = "<br>Email not available <br>"
+                                y.innerHTML = "x"
+                                y.style = "color: red;margin-left: -23px;"
+                        }
+                        else{
+                            // If the input is not empty and the entered email is valid
+                            if($('#id_email').val() != "" && document.getElementById("id_email").checkValidity()){
+                                x.style = "color: green;font-size: 17px;"
+                                x.innerHTML = "<br>Email is available <br>"
+                                y.innerHTML = "✓"
+                                y.style = "color: green;margin-left: -23px;"
+                            }
+                            else{
+                                x.innerHTML = ""
+                                y.innerHTML = ""
+                            }
+                        }
+                    }
+                })
+            });
+
+</script>
+
+
+for csv download 
+<a href="/downloadcontact" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Download Response</a>
+                <div style="padding: 5px">
+
+@app.route("/downloadcontact")
+@login_required
+def ContactToCsv():
+    if current_user.is_staff == 1:
+        allContacts = Contact.query.all()
+        if len(allContacts) == 0:
+            flash("No Contacts available", "danger")
+            return redirect("/view/contacts")
+        si = io.StringIO()
+        cw = csv.writer(si, delimiter=",")
+        cw.writerow(["FirstName", "LastName", "Email", "Number", "Message"])
+        for row in allContacts:
+            row = rowToListContact(row)
+            cw.writerow(row)
+        output = make_response(si.getvalue())
+        output.headers[
+            "Content-Disposition"
+        ] = "attachment; filename=contact_response.csv"
+        output.headers["Content-type"] = "text/csv"
+        return output
+    else:
+        flash("Not authorized!", "danger")
+        return redirect("/dashboard")
+
+
+
+
+404 error
+# error handler
+handler404 = 'home.views.handler404'
+
+def handler404(request, *args, **argv):
+    response = render(request, '404.html')
+    response.status_code = 404
+    return response
+
+
+
+
+
+<?php 
+$con = mysqli_connect( "localhost", "root", "", "LesKollab" ) or die( mysqli_error( $con) );
+
+
+$query = "SELECT * FROM contact";
+$result = $con->query($query);
+// print($result);
+if (!$result) die('Couldn\'t fetch records');
+$headers = $result->fetch_fields();
+foreach($headers as $header) {
+    $head[] = $header->name;
+}
+$fp = fopen('php://output', 'w');
+
+if ($fp && $result) {
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="export.csv"');
+    header('Pragma: no-cache');
+    header('Expires: 0');
+    fputcsv($fp, array_values($head)); 
+    while ($row = $result->fetch_array(MYSQLI_NUM)) {
+        fputcsv($fp, array_values($row));
+    }
+    die;
+}
+?>
